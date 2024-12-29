@@ -1,0 +1,12 @@
+Simple Note Taker is my attempt at making a note taking application using Python 3.11 and PyQt5 (A Qt GUI bind "for" Python).
+
+Thus far, the application has a single file menu with four actions: Clear Note, Save Note, Load Note, and Exit. The separator, of course, doesn not count.
+
+The SimpleNoteTaker class inherits its functionality from QWidget. The widget has one vertical box layout with contains a QTextEdit, a nexted horizantal layout containing the 
+color picker, and cler note push bottons. A Save Note, and Load Note button are arranged one on top of each other.
+
+To do:
+      1 - Fix the issue of the color reseting once caret is at beginning,
+      2 - Organize the code better. Right now, it is a mess.
+      3 - Add edit file, and actions.
+                                                                                                 
