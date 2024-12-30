@@ -1,3 +1,4 @@
+from PyQt5.QtGui import QColor, QTextCursor, QPalette, QTextFormat, QTextCharFormat
 from PyQt5.QtWidgets import (
     QWidget,
     QTextEdit,
@@ -9,7 +10,7 @@ from PyQt5.QtWidgets import (
     QMenu,
     QMenuBar,
     QHBoxLayout,
-    QColorDialog)
+    QColorDialog, QFontDialog)
 
 import os
 
@@ -31,7 +32,28 @@ class SimpleNoteTaker(QWidget):
         file.actions()[1].triggered.connect(self.saveNote)
         file.actions()[2].triggered.connect(self.loadNote)
         file.actions()[4].triggered.connect(self.close)
+
+        edit = QMenu("&Edit", self)
+        edit.addActions([QAction("Undo", self),
+                         QAction("redo", self),
+                         edit.addSeparator(),
+                         QAction("Cut", self),
+                         QAction("Copy", self),
+                         QAction("Paste", self),
+                         edit.addSeparator(),
+                         QAction("Pick text color", self),
+                         QAction("Pick font", self)])
+
+        edit.actions()[0].triggered.connect(self.edit_undo) # Undo - index 0
+        edit.actions()[1].triggered.connect(self.edit_redo) # Redo - index 1
+        edit.actions()[3].triggered.connect(self.edit_cut)  # Cut - index 3
+        edit.actions()[4].triggered.connect(self.edit_copy) # Copy - index 4
+        edit.actions()[5].triggered.connect(self.edit_paste) # Paste - index 5
+        edit.actions()[6].triggered.connect(self.edit_color_picker) # Color Picker - index 6
+        edit.actions()[7].triggered.connect(self.edit_font_picker)  # Font picker - index 7
+
         self.menubar.addMenu(file)
+        self.menubar.addMenu(edit)
 
         self.setWindowTitle("Simple Note Taker")
         self.setMinimumSize(500, 300)
@@ -84,7 +106,8 @@ class SimpleNoteTaker(QWidget):
         print(fileNote)
         if os.path.exists(fileNote[0]):
             with open(fileNote[0], "r") as file:
-                self.textarea.setText(file.read())
+                data = file.read()
+                self.textarea.setText(data)
         else:
             QMessageBox.warning(self, "File does not exist", "The file you are trying to load does not exist")
 
@@ -112,3 +135,40 @@ class SimpleNoteTaker(QWidget):
         if textcolor.isValid() and len(self.textarea.toPlainText()) >= 0:
             self.textarea.setTextColor(newcolor)
             self.textarea.setPlaceholderText("Start typing...")
+
+
+    def edit_undo(self):
+        self.textarea.undo()
+
+    def edit_redo(self):
+        self.textarea.redo()
+
+    def edit_cut(self):
+        self.textarea.cut()
+
+    def edit_copy(self):
+        self.textarea.copy()
+
+    def edit_paste(self):
+        self.textarea.paste()
+
+    def edit_color_picker(self):
+        current_color = self.textarea.palette().color(self.textarea.foregroundRole())
+
+        new_color = QColorDialog.getColor(current_color)
+
+        if new_color.isValid():
+            format = QTextCharFormat()
+            format.setForeground(new_color)
+
+
+            self.textarea.mergeCurrentCharFormat(format)
+
+            palette = self.textarea.palette()
+            palette.setColor(QPalette.PlaceholderText, new_color)
+            self.textarea.setPalette(palette)
+
+    def edit_font_picker(self):
+        font = QFontDialog.getFont()
+
+        self.textarea.setFont(font[0])
