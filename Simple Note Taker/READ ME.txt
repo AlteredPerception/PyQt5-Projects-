@@ -6,7 +6,9 @@ The SimpleNoteTaker class inherits its functionality from QWidget. The widget ha
 color picker, and cler note push bottons. A Save Note, and Load Note button are arranged one on top of each other.
 
 To do:
-      1 - Fix the issue of the color reseting once caret is at beginning,
-      2 - Organize the code better. Right now, it is a mess.
-      3 - Add edit file, and actions.
+     [ ] 1 - Fix the issue of the color reseting once caret is at beginning,
+     [ ] 2 - Organize the code better. Right now, it is a mess.
+     [x] 3 - Add edit file, and actions.
+
+3 - Edit file, and actions added.
                                                                                                  
